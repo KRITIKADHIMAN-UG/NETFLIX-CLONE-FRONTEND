@@ -1,0 +1,204 @@
+//login.html file 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix India - Watch TV Shows Online, Watch Movies Online</title>
+    <link rel="stylesheet" href="styles/login.css">
+</head>
+<body>
+    <div class="login-container active" id="loginContainer">
+        <div class="login-background">
+            <img src="https://assets.nflxext.com/ffe/siteui/vlv3/6c881f24-fee0-4086-8492-6b1942c2b0f9/2d2ce8e4-6db7-4d85-8252-513e6c8bfb23/IN-en-20231120-popsignuptwoweeks-perspective_alpha_website_large.jpg" alt="Netflix Background">
+            <div class="overlay"></div>
+        </div>
+        
+        <div class="login-form-container">
+            <div class="login-logo">
+                <h1>NETFLIX</h1>
+            </div>
+            
+            <div class="login-form">
+                <h2>Sign In</h2>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <input type="text" id="email" placeholder="Email or phone number" required>
+                        <span class="error-message" id="emailError"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="password" id="password" placeholder="Password" required>
+                        <span class="error-message" id="passwordError"></span>
+                    </div>
+                    
+                    <button type="submit" class="signin-btn">Sign In</button>
+                    
+                    <div class="form-options">
+                        <div class="remember-me">
+                            <input type="checkbox" id="rememberMe">
+                            <label for="rememberMe">Remember me</label>
+                        </div>
+                        <a href="#" class="need-help">Need help?</a>
+                    </div>
+                </form>
+                
+                <div class="signup-prompt">
+                    <p>New to Netflix? <a href="#">Sign up now</a></p>
+                    <p class="recaptcha-text">This page is protected by Google reCAPTCHA to ensure you're not a bot. <a href="#">Learn more.</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>
+
+// main.html file 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix India - Watch TV Shows Online, Watch Movies Online</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+</head>
+<body>
+    <div class="main-app" id="mainApp">
+        <!-- Navigation Bar -->
+        <nav class="navbar" id="navbar">
+            <div class="navbar-content">
+                <div class="logo">
+                    <a href="index.html">NETFLIX</a>
+                </div>
+                
+                <div class="nav-menu">
+                    <a href="index.html" class="nav-link active">Home</a>
+                    <a href="tv-shows.html" class="nav-link">TV Shows</a>
+                    <a href="movies.html" class="nav-link">Movies</a>
+                    <a href="new.html" class="nav-link">New & Popular</a>
+                    <a href="mylist.html" class="nav-link">My List</a>
+                </div>
+                
+                <div class="nav-right">
+                    <div class="search-box" id="searchBox">
+                        <input type="text" placeholder="Search">
+                        <span class="search-icon" id="searchIcon">🔍</span>
+                    </div>
+                    <div class="user-menu">
+                        <span class="bell-icon">🔔</span>
+                        <div class="user-avatar">
+                            <img src="assets/images/netflix-avatar.png" alt="Netflix Logo">
+                        </div>
+                        <div class="dropdown-arrow" id="dropdownArrow">▼</div>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Toggle -->
+                <div class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="index.html" class="nav-link active">Home</a>
+            <a href="tv-shows.html" class="nav-link">TV Shows</a>
+            <a href="movies.html" class="nav-link">Movies</a>
+            <a href="new.html" class="nav-link">New & Popular</a>
+            <a href="mylist.html" class="nav-link">My List</a>
+        </div>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-background">
+                <img src="https://assets.nflxext.com/ffe/siteui/vlv3/6c881f24-fee0-4086-8492-6b1942c2b0f9/2d2ce8e4-6db7-4d85-8252-513e6c8bfb23/IN-en-20231120-popsignuptwoweeks-perspective_alpha_website_large.jpg" alt="Stranger Things">
+                <div class="hero-overlay"></div>
+            </div>
+            
+            <div class="hero-content">
+                <h1 class="hero-title">Stranger Things</h1>
+                <div class="hero-meta">
+                    <span class="match-percentage">98% Match</span>
+                    <span class="year">2016</span>
+                    <span class="rating">TV-MA</span>
+                    <span class="duration">4 Seasons</span>
+                    <span class="quality">HD</span>
+                </div>
+                <p class="hero-description">
+                    When a young boy disappears, his mother, a police chief and his friends must confront terrifying supernatural forces in order to get him back.
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn btn-play" id="playBtn">
+                        <span class="play-icon">▶</span>
+                        Play
+                    </button>
+                    <button class="btn btn-info" id="infoBtn">
+                        <span class="info-icon">ℹ</span>
+                        More Info
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Movie Categories -->
+        <main class="content">
+            <!-- Trending Now -->
+            <section class="movie-category">
+                <h2 class="category-title">Trending Now</h2>
+                <div class="movie-carousel" data-category="trending">
+                    <!-- Movie cards will be dynamically loaded by JavaScript -->
+                </div>
+            </section>
+
+            <!-- New Releases -->
+            <section class="movie-category">
+                <h2 class="category-title">New Releases</h2>
+                <div class="movie-carousel" data-category="new-releases">
+                    <!-- Movie cards will be dynamically loaded by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Continue with other categories... -->
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">Press</a></li>
+                            <li><a href="#">Netflix Blog</a></li>
+                        </ul>
+                    </div>
+                    <!-- Footer columns will be populated by JavaScript -->
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Netflix Clone. All rights reserved.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook">📘</a>
+                        <a href="#" aria-label="Twitter">🐦</a>
+                        <a href="#" aria-label="Instagram">📷</a>
+                        <a href="#" aria-label="YouTube">📺</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/carousel.js"></script>
+    <script src="js/ui.js"></script>
+</body>
+</html>
