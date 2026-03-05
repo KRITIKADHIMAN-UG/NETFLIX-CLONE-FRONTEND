@@ -1,0 +1,2658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Clone - Complete</title>
+    <style>
+        /* Complete Netflix Clone CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #141414;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+            display: none;
+        }
+
+        .login-container.active {
+            display: block;
+        }
+
+        .login-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .login-background img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .login-background .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.8) 100%);
+        }
+
+        .login-form-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 450px;
+            padding: 60px 68px 40px;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            z-index: 10;
+        }
+
+        .login-logo h1 {
+            color: #e50914;
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .login-form h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px 20px;
+            background: #333;
+            border: none;
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            background: #454545;
+            box-shadow: 0 0 0 2px #e50914;
+        }
+
+        .form-group input::placeholder {
+            color: #8c8c8c;
+        }
+
+        .error-message {
+            color: #e87c03;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .signin-btn {
+            width: 100%;
+            padding: 16px;
+            background: #e50914;
+            border: none;
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .signin-btn:hover {
+            background: #f40612;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .demo-credentials {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #b3b3b3;
+            text-align: center;
+        }
+
+        .demo-credentials p {
+            margin: 0.3rem 0;
+        }
+
+        .demo-credentials strong {
+            color: #ffffff;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: auto;
+        }
+
+        .remember-me label {
+            color: #8c8c8c;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .need-help {
+            color: #8c8c8c;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .need-help:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .signup-prompt p {
+            color: #8c8c8c;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .signup-prompt a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .signup-prompt a:hover {
+            color: #e50914;
+        }
+
+        /* Main App Styles */
+        .main-app {
+            display: none;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .main-app.active {
+            display: block;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to bottom, rgba(20, 20, 20, 0.9) 0%, transparent 100%);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: background 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(20, 20, 20, 0.95);
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 4%;
+            max-width: 1920px;
+            margin: 0 auto;
+        }
+
+        .logo h1 {
+            color: #e50914;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #ffffff;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding: 8px 35px 8px 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #ffffff;
+            border-radius: 4px;
+            color: #ffffff;
+            width: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .search-box.active input {
+            width: 200px;
+            opacity: 1;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #ffffff;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .bell-icon {
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .bell-icon:hover {
+            transform: scale(1.2);
+        }
+
+        .notification-dropdown {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            width: 350px;
+            max-height: 400px;
+            background: #141414;
+            border: 1px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow: hidden;
+            animation: slideDown 0.3s ease;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .notification-header h3 {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .close-notifications {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .close-notifications:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .notification-list {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 1rem;
+            border-bottom: 1px solid #222;
+            transition: background 0.3s ease;
+            cursor: pointer;
+        }
+
+        .notification-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-content h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            color: #ffffff;
+        }
+
+        .notification-content p {
+            font-size: 0.8rem;
+            color: #b3b3b3;
+            margin-bottom: 0.3rem;
+            line-height: 1.3;
+        }
+
+        .notification-time {
+            font-size: 0.7rem;
+            color: #666;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .dropdown-arrow {
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown-arrow:hover {
+            transform: scale(1.2);
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .mobile-menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 85vh;
+            margin-top: -70px;
+            overflow: hidden;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .hero-background img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(20, 20, 20, 0.8) 0%, rgba(20, 20, 20, 0.4) 50%, transparent 100%);
+        }
+
+        .hero-content {
+            position: absolute;
+            top: 25%;
+            left: 4%;
+            right: 4%;
+            z-index: 2;
+            color: white;
+            max-width: 600px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            margin-top: 2rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .match-percentage {
+            color: #46d369;
+            font-weight: 600;
+        }
+
+        .year, .rating, .duration, .quality {
+            color: #ffffff;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-play {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .btn-play:hover {
+            background: rgba(255, 255, 255, 0.75);
+            transform: scale(1.05);
+        }
+
+        .btn-info {
+            background: rgba(109, 109, 110, 0.7);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-info:hover {
+            background: rgba(109, 109, 110, 0.4);
+            border-color: #ffffff;
+        }
+
+        /* Movie Categories */
+        .content {
+            padding: 2rem 4%;
+            max-width: 1920px;
+            margin: 0 auto;
+        }
+
+        .movie-category {
+            margin-bottom: 3rem;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .movie-carousel {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 1rem 0;
+            position: relative;
+        }
+
+        .movie-carousel::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .movie-carousel::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .movie-carousel::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        .movie-carousel::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .movie-card {
+            flex: 0 0 auto;
+            width: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .movie-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .movie-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
+            padding: 1rem;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .movie-card:hover .movie-info {
+            opacity: 1;
+        }
+
+        .movie-info h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .movie-info p {
+            font-size: 0.8rem;
+            color: #b3b3b3;
+        }
+
+        /* Movie Detail Modal */
+        .movie-detail-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: none;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .movie-detail-modal.active {
+            display: block;
+        }
+
+        .movie-detail-content {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .movie-detail-container {
+            background: #141414;
+            border-radius: 12px;
+            max-width: 1200px;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            animation: slideUp 0.4s ease;
+        }
+
+        .movie-detail-header {
+            position: relative;
+            height: 400px;
+            background: linear-gradient(to bottom, transparent 0%, rgba(20, 20, 20, 0.9) 100%);
+        }
+
+        .movie-detail-header img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .movie-detail-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 3rem;
+            background: linear-gradient(to top, rgba(20, 20, 20, 1) 0%, transparent 100%);
+        }
+
+        .movie-detail-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .movie-detail-meta {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .movie-detail-year, .movie-detail-rating, .movie-detail-duration {
+            color: #b3b3b3;
+            font-size: 1.1rem;
+        }
+
+        .movie-detail-genres {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .genre-tag {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .movie-detail-body {
+            padding: 3rem;
+        }
+
+        .movie-detail-description {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #b3b3b3;
+            margin-bottom: 2rem;
+        }
+
+        .movie-detail-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .movie-detail-cast {
+            margin-bottom: 2rem;
+        }
+
+        .movie-detail-cast h3 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .cast-list {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .cast-member {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            color: #b3b3b3;
+            font-size: 0.9rem;
+        }
+
+        .close-movie-detail {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .close-movie-detail:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .footer {
+            background: #141414;
+            padding: 3rem 4% 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid #333;
+        }
+
+        .footer-content {
+            max-width: 1920px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h4 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-column a {
+            color: #b3b3b3;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-bottom p {
+            color: #b3b3b3;
+            font-size: 0.9rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            color: #b3b3b3;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #ffffff;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Carousel Controls */
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 1rem;
+            pointer-events: none;
+        }
+
+        .carousel-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            border-radius: 50%;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            pointer-events: all;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+
+        .carousel-btn:active {
+            transform: scale(0.95);
+        }
+
+        .no-results {
+            color: #ffffff;
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.2rem;
+        }
+
+        .carousel-btn.prev {
+            left: 1rem;
+        }
+
+        .carousel-btn.next {
+            right: 1rem;
+        }
+
+        /* Modal Styles */
+        .movie-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: #141414;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #ffffff;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-body p {
+            color: #b3b3b3;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .search-box.active input {
+                width: 150px;
+            }
+            
+            .hero {
+                height: 70vh;
+            }
+            
+            .hero-content {
+                left: 4%;
+                right: 4%;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-description {
+                font-size: 1rem;
+            }
+            
+            .content {
+                padding: 1rem 4%;
+            }
+            
+            .movie-card {
+                width: 150px;
+            }
+            
+            .movie-card img {
+                height: 225px;
+            }
+            
+            .footer-links {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            
+            .login-form-container {
+                padding: 40px 30px;
+                width: 95%;
+                max-width: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-content {
+                padding: 1rem 2%;
+            }
+            
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .content {
+                padding: 1rem 2%;
+            }
+            
+            .movie-card {
+                width: 120px;
+            }
+            
+            .movie-card img {
+                height: 180px;
+            }
+            
+            .footer-links {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 70px;
+            left: -100%;
+            width: 100%;
+            height: calc(100vh - 70px);
+            background: rgba(20, 20, 20, 0.98);
+            backdrop-filter: blur(10px);
+            transition: left 0.3s ease;
+            z-index: 999;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            left: 0;
+        }
+
+        .mobile-menu .nav-link {
+            display: block;
+            padding: 1rem 0;
+            border-bottom: 1px solid #333;
+            font-size: 1.1rem;
+        }
+
+        .mobile-menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .mobile-menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-container active" id="loginContainer">
+        <div class="login-background">
+            <img src="https://assets.nflxext.com/ffe/siteui/vlv3/6c881f24-fee0-4086-8492-6b1942c2b0f9/2d2ce8e4-6db7-4d85-8252-513e6c8bfb23/IN-en-20231120-popsignuptwoweeks-perspective_alpha_website_large.jpg" alt="Netflix Background">
+            <div class="overlay"></div>
+        </div>
+        
+        <div class="login-form-container">
+            <div class="login-logo">
+                <h1>NETFLIX</h1>
+            </div>
+            
+            <div class="login-form">
+                <h2>Sign In</h2>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <input type="text" id="email" placeholder="Email or phone number" required>
+                        <span class="error-message" id="emailError"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="password" id="password" placeholder="Password" required>
+                        <span class="error-message" id="passwordError"></span>
+                    </div>
+                    
+                    <button type="submit" class="signin-btn">Sign In</button>
+                    
+                    <div class="form-options">
+                        <a href="#" class="need-help">Need help?</a>
+                    </div>
+                </form>
+                
+                <div class="demo-credentials">
+                    <p><strong>Demo Credentials:</strong></p>
+                    <p>Email: user@netflix.com | Password: password</p>
+                    <p>Or use: test@netflix.com / 123456</p>
+                </div>
+                
+                <div class="signup-prompt">
+                    <p>New to Netflix? <a href="#">Sign up now</a></p>
+                    <p class="recaptcha-text">This page is protected by Google reCAPTCHA to ensure you're not a bot. <a href="#">Learn more.</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="main-app" id="mainApp">
+        <!-- Navigation Bar -->
+        <nav class="navbar" id="navbar">
+            <div class="navbar-content">
+                <div class="logo">
+                    <h1>NETFLIX</h1>
+                </div>
+                
+                <div class="nav-menu">
+                    <a href="#" class="nav-link active">Home</a>
+                    <a href="#" class="nav-link">TV Shows</a>
+                    <a href="#" class="nav-link">Movies</a>
+                    <a href="#" class="nav-link">New & Popular</a>
+                    <a href="#" class="nav-link">My List</a>
+                </div>
+                
+                <div class="nav-right">
+                    <div class="search-box" id="searchBox">
+                        <input type="text" placeholder="Search">
+                        <span class="search-icon" id="searchIcon">🔍</span>
+                    </div>
+                    <div class="user-menu">
+                        <span class="bell-icon">🔔</span>
+                        <div class="dropdown-arrow" id="dropdownArrow">▼</div>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Toggle -->
+                <div class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-background">
+                <img src="https://picsum.photos/seed/netflix-hero/1920/1080.jpg" alt="Hero Background">
+                <div class="hero-overlay"></div>
+            </div>
+            
+            <div class="hero-content">
+                <h1 class="hero-title">Stranger Things</h1>
+                <div class="hero-meta">
+                    <span class="match-percentage">98% Match</span>
+                    <span class="year">2016</span>
+                    <span class="rating">TV-MA</span>
+                    <span class="duration">4 Seasons</span>
+                    <span class="quality">HD</span>
+                </div>
+                <p class="hero-description">
+                    When a young boy disappears, his mother, a police chief and his friends must confront terrifying supernatural forces in order to get him back.
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn btn-play" id="playBtn">
+                        <span class="play-icon">▶</span>
+                        Play
+                    </button>
+                    <button class="btn btn-info" id="infoBtn">
+                        <span class="info-icon">ℹ</span>
+                        More Info
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Movie Categories -->
+        <main class="content">
+            <!-- Trending Now -->
+            <section class="movie-category">
+                <h2 class="category-title">Trending Now</h2>
+                <div class="movie-carousel" data-category="trending">
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/movie1/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Stranger Things</h3>
+                            <p>Sci-Fi, Drama</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/movie2/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>The Crown</h3>
+                            <p>Drama, History</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/movie3/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Wednesday</h3>
+                            <p>Horror, Comedy</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/movie4/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Bridgerton</h3>
+                            <p>Romance, Drama</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/movie5/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>The Witcher</h3>
+                            <p>Fantasy, Adventure</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/movie6/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Money Heist</h3>
+                            <p>Crime, Thriller</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- New Releases -->
+            <section class="movie-category">
+                <h2 class="category-title">New Releases</h2>
+                <div class="movie-carousel" data-category="new-releases">
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/new1/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Oppenheimer</h3>
+                            <p>Biography, Drama</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/new2/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Barbie</h3>
+                            <p>Comedy, Fantasy</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/new3/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>The Little Mermaid</h3>
+                            <p>Family, Musical</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/new4/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Guardians of the Galaxy Vol. 3</h3>
+                            <p>Action, Sci-Fi</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/new5/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Fast X</h3>
+                            <p>Action, Crime</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/new6/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Indiana Jones 5</h3>
+                            <p>Adventure, Action</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Comedy -->
+            <section class="movie-category">
+                <h2 class="category-title">Comedy Movies</h2>
+                <div class="movie-carousel" data-category="comedy">
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/comedy1/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Superbad</h3>
+                            <p>Comedy, Teen</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/comedy2/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>The Hangover</h3>
+                            <p>Comedy, Adventure</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/comedy3/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Bridesmaids</h3>
+                            <p>Comedy, Romance</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/comedy4/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Step Brothers</h3>
+                            <p>Comedy, Family</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/comedy5/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Anchorman</h3>
+                            <p>Comedy, Classic</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/comedy6/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>21 Jump Street</h3>
+                            <p>Comedy, Action</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Action Movies -->
+            <section class="movie-category">
+                <h2 class="category-title">Action & Thriller</h2>
+                <div class="movie-carousel" data-category="action">
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/action1/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Mad Max: Fury Road</h3>
+                            <p>Action, Adventure</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/action2/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>John Wick</h3>
+                            <p>Action, Thriller</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/action3/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>The Dark Knight</h3>
+                            <p>Action, Crime</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/action4/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Mission: Impossible</h3>
+                            <p>Action, Spy</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/action5/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Die Hard</h3>
+                            <p>Action, Classic</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/action6/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>The Matrix</h3>
+                            <p>Sci-Fi, Action</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TV Shows -->
+            <section class="movie-category">
+                <h2 class="category-title">TV Shows</h2>
+                <div class="movie-carousel" data-category="tv-shows">
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/tv1/300/450.jpg" alt="TV Show">
+                        <div class="movie-info">
+                            <h3>Breaking Bad</h3>
+                            <p>Drama, Crime</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/tv2/300/450.jpg" alt="TV Show">
+                        <div class="movie-info">
+                            <h3>Friends</h3>
+                            <p>Comedy, Romance</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/tv3/300/450.jpg" alt="TV Show">
+                        <div class="movie-info">
+                            <h3>Black Mirror</h3>
+                            <p>Sci-Fi, Thriller</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/tv4/300/450.jpg" alt="TV Show">
+                        <div class="movie-info">
+                            <h3>The Crown</h3>
+                            <p>Drama, History</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/tv5/300/450.jpg" alt="TV Show">
+                        <div class="movie-info">
+                            <h3>Game of Thrones</h3>
+                            <p>Adventure, Fantasy</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/tv6/300/450.jpg" alt="TV Show">
+                        <div class="movie-info">
+                            <h3>The Walking Dead</h3>
+                            <p>Horror, Drama</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Movies -->
+            <section class="movie-category">
+                <h2 class="category-title">Movies</h2>
+                <div class="movie-carousel" data-category="movies">
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/film1/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Avengers: Endgame</h3>
+                            <p>Action, Adventure</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/film2/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>The Notebook</h3>
+                            <p>Romance, Drama</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/film3/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Finding Nemo</h3>
+                            <p>Comedy, Family</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/film4/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Gone Girl</h3>
+                            <p>Thriller, Mystery</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/film5/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Interstellar</h3>
+                            <p>Sci-Fi, Action</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/film6/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>The Social Network</h3>
+                            <p>Documentary, Biography</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- My List -->
+            <section class="movie-category">
+                <h2 class="category-title">My List</h2>
+                <div class="movie-carousel" data-category="my-list">
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/list1/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>The Shawshank Redemption</h3>
+                            <p>Drama, Crime</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/list2/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>The Godfather</h3>
+                            <p>Action, Crime</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/list3/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Pulp Fiction</h3>
+                            <p>Comedy, Crime</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/list4/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Inception</h3>
+                            <p>Sci-Fi, Thriller</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/list5/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>The Silence of the Lambs</h3>
+                            <p>Thriller, Horror</p>
+                        </div>
+                    </div>
+                    <div class="movie-card">
+                        <img src="https://picsum.photos/seed/list6/300/450.jpg" alt="Movie">
+                        <div class="movie-info">
+                            <h3>Forrest Gump</h3>
+                            <p>Drama, Romance</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Movie Detail Modal -->
+        <div class="movie-detail-modal" id="movieDetailModal">
+            <div class="movie-detail-content">
+                <div class="movie-detail-container">
+                    <button class="close-movie-detail" onclick="closeMovieDetail()">×</button>
+                    <div class="movie-detail-header">
+                        <img id="movieDetailImage" src="" alt="Movie Poster">
+                        <div class="movie-detail-overlay">
+                            <h2 class="movie-detail-title" id="movieDetailTitle"></h2>
+                            <div class="movie-detail-meta">
+                                <span class="movie-detail-year" id="movieDetailYear"></span>
+                                <span class="movie-detail-rating" id="movieDetailRating"></span>
+                                <span class="movie-detail-duration" id="movieDetailDuration"></span>
+                            </div>
+                            <div class="movie-detail-genres" id="movieDetailGenres"></div>
+                        </div>
+                    </div>
+                    <div class="movie-detail-body">
+                        <p class="movie-detail-description" id="movieDetailDescription"></p>
+                        <div class="movie-detail-actions">
+                            <button class="btn btn-play">▶ Play</button>
+                            <button class="btn btn-info">ℹ More Info</button>
+                            <button class="btn btn-info">+ Add to List</button>
+                        </div>
+                        <div class="movie-detail-cast">
+                            <h3>Cast & Crew</h3>
+                            <div class="cast-list" id="movieDetailCast"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="#about" onclick="handleFooterLink('about')">About Us</a></li>
+                            <li><a href="#careers" onclick="handleFooterLink('careers')">Careers</a></li>
+                            <li><a href="#press" onclick="handleFooterLink('press')">Press</a></li>
+                            <li><a href="#blog" onclick="handleFooterLink('blog')">Netflix Blog</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>View</h4>
+                        <ul>
+                            <li><a href="#terms" onclick="handleFooterLink('terms')">Website Terms</a></li>
+                            <li><a href="#privacy" onclick="handleFooterLink('privacy')">Privacy</a></li>
+                            <li><a href="#cookies" onclick="handleFooterLink('cookies')">Cookie Preferences</a></li>
+                            <li><a href="#corporate" onclick="handleFooterLink('corporate')">Corporate Information</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Use Cases</h4>
+                        <ul>
+                            <li><a href="#speedtest" onclick="handleFooterLink('speedtest')">Speed Test</a></li>
+                            <li><a href="#legal" onclick="handleFooterLink('legal')">Legal Notices</a></li>
+                            <li><a href="#guarantees" onclick="handleFooterLink('guarantees')">Legal Guarantees</a></li>
+                            <li><a href="#onlynetflix" onclick="handleFooterLink('onlynetflix')">Only on Netflix</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Account</h4>
+                        <ul>
+                            <li><a href="#account" onclick="handleFooterLink('account')">My Account</a></li>
+                            <li><a href="#giftcards" onclick="handleFooterLink('giftcards')">Redeem Gift Cards</a></li>
+                            <li><a href="#privacysettings" onclick="handleFooterLink('privacysettings')">Privacy Settings</a></li>
+                            <li><a href="#help" onclick="handleFooterLink('help')">Help Center</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Netflix Clone. All rights reserved.</p>
+                    <div class="social-links">
+                        <a href="https://facebook.com/netflix" target="_blank" rel="noopener noreferrer" onclick="handleSocialLink('facebook')">📘</a>
+                        <a href="https://twitter.com/netflix" target="_blank" rel="noopener noreferrer" onclick="handleSocialLink('twitter')">🐦</a>
+                        <a href="https://instagram.com/netflix" target="_blank" rel="noopener noreferrer" onclick="handleSocialLink('instagram')">📷</a>
+                        <a href="https://youtube.com/netflix" target="_blank" rel="noopener noreferrer" onclick="handleSocialLink('youtube')">📺</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Complete Netflix Clone JavaScript
+        
+        // Footer link handlers
+        function handleFooterLink(section) {
+            const pages = {
+                about: 'https://about.netflix.com/en',
+                careers: 'https://jobs.netflix.com',
+                press: 'https://media.netflix.com/en/',
+                blog: 'https://media.netflix.com/en/press-releases',
+                terms: 'https://help.netflix.com/legal/termsofuse',
+                privacy: 'https://help.netflix.com/legal/privacy',
+                cookies: 'https://help.netflix.com/legal/cookies',
+                corporate: 'https://ir.netflix.net/ir-overview/profile/default.aspx',
+                speedtest: 'https://fast.com',
+                legal: 'https://help.netflix.com/legal/notices',
+                guarantees: 'https://help.netflix.com/legal/corpinfo',
+                onlynetflix: 'https://www.netflix.com/tudum',
+                account: '#account',
+                giftcards: 'https://www.netflix.com/redeem',
+                privacysettings: '#privacy-settings',
+                help: 'https://help.netflix.com'
+            };
+            
+            if (pages[section]) {
+                if (pages[section].startsWith('#')) {
+                    // Handle internal navigation
+                    showNotification(`Navigating to ${section.replace(/([A-Z])/g, ' $1').trim()}...`);
+                } else {
+                    // Open external links in new tab
+                    window.open(pages[section], '_blank', 'noopener,noreferrer');
+                }
+            }
+            return false;
+        }
+        
+        // Social media link handlers
+        function handleSocialLink(platform) {
+            const urls = {
+                facebook: 'https://facebook.com/netflix',
+                twitter: 'https://twitter.com/netflix',
+                instagram: 'https://instagram.com/netflix',
+                youtube: 'https://youtube.com/netflix'
+            };
+            
+            if (urls[platform]) {
+                window.open(urls[platform], '_blank', 'noopener,noreferrer');
+                showNotification(`Opening Netflix ${platform.charAt(0).toUpperCase() + platform.slice(1)}...`);
+            }
+            return false;
+        }
+        
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
+        const loginContainer = document.getElementById('loginContainer');
+        const mainApp = document.getElementById('mainApp');
+        const navbar = document.getElementById('navbar');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const searchBox = document.getElementById('searchBox');
+        const searchIcon = document.getElementById('searchIcon');
+        const movieCarousels = document.querySelectorAll('.movie-carousel');
+        const movieCards = document.querySelectorAll('.movie-card');
+        const playBtn = document.getElementById('playBtn');
+        const infoBtn = document.getElementById('infoBtn');
+        const dropdownArrow = document.getElementById('dropdownArrow');
+
+        // Check if user is already logged in
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('netflixLoggedIn');
+            
+            if (isLoggedIn === 'true') {
+                showMainApp();
+            }
+        }
+
+        // Login Form Validation and Submission
+        if (loginForm) {
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Reset error messages
+                emailError.style.display = 'none';
+                passwordError.style.display = 'none';
+                
+                // Get form values
+                const email = emailInput.value.trim();
+                const password = passwordInput.value.trim();
+                
+                // Validate email
+                if (!email) {
+                    emailError.textContent = 'Please enter your email or phone number.';
+                    emailError.style.display = 'block';
+                    emailInput.focus();
+                    return;
+                }
+                
+                if (!isValidEmail(email) && !isValidPhone(email)) {
+                    emailError.textContent = 'Please enter a valid email or phone number.';
+                    emailError.style.display = 'block';
+                    emailInput.focus();
+                    return;
+                }
+                
+                // Validate password
+                if (!password) {
+                    passwordError.textContent = 'Please enter your password.';
+                    passwordError.style.display = 'block';
+                    passwordInput.focus();
+                    return;
+                }
+                
+                if (password.length < 4) {
+                    passwordError.textContent = 'Your password must contain between 4 and 60 characters.';
+                    passwordError.style.display = 'block';
+                    passwordInput.focus();
+                    return;
+                }
+                
+                // Validate credentials against working accounts
+                const validCredentials = [
+                    { email: 'user@netflix.com', password: 'password' },
+                    { email: 'test@netflix.com', password: '123456' },
+                    { email: 'demo@netflix.com', password: 'demo123' },
+                    { email: 'admin@netflix.com', password: 'admin' },
+                    { email: '1234567890', password: 'password' },
+                    { email: '9876543210', password: '123456' }
+                ];
+                
+                const isValidCredential = validCredentials.some(cred => 
+                    cred.email === email && cred.password === password
+                );
+                
+                if (!isValidCredential) {
+                    passwordError.textContent = 'Incorrect email or password. Try again or use demo credentials: user@netflix.com / password';
+                    passwordError.style.display = 'block';
+                    passwordInput.focus();
+                    return;
+                }
+                
+                // Simulate successful login
+                simulateLogin(email);
+            });
+        }
+
+        // Email validation
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Phone validation
+        function isValidPhone(phone) {
+            const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+            return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 10;
+        }
+
+        // Simulate login process
+        function simulateLogin(email) {
+            // Show loading state
+            const submitBtn = document.querySelector('.signin-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Signing in...';
+            submitBtn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Store login state
+                localStorage.setItem('netflixLoggedIn', 'true');
+                
+                // Show main app
+                showMainApp();
+            }, 1500);
+        }
+
+        // Show main app
+        function showMainApp() {
+            loginContainer.classList.remove('active');
+            mainApp.classList.add('active');
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                
+                // Create mobile menu if it doesn't exist
+                let mobileMenu = document.querySelector('.mobile-menu');
+                if (!mobileMenu) {
+                    mobileMenu = createMobileMenu();
+                    document.body.appendChild(mobileMenu);
+                }
+                
+                mobileMenu.classList.toggle('active');
+            });
+        }
+
+        // Navigation tabs functionality
+        const navLinks = document.querySelectorAll('.nav-menu .nav-link');
+        const contentSections = {
+            'Home': 'trending',
+            'TV Shows': 'tv-shows',
+            'Movies': 'movies',
+            'New & Popular': 'new-releases',
+            'My List': 'my-list'
+        };
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links
+                navLinks.forEach(l => l.classList.remove('active'));
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Show corresponding content
+                const sectionName = this.textContent.trim();
+                const targetSection = contentSections[sectionName];
+                
+                if (targetSection) {
+                    showContentSection(targetSection);
+                }
+            });
+        });
+
+        function showContentSection(sectionType) {
+            // Hide all sections first
+            const allSections = document.querySelectorAll('.movie-category');
+            allSections.forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show relevant sections based on tab
+            if (sectionType === 'trending') {
+                // Show all sections for Home
+                allSections.forEach(section => {
+                    section.style.display = 'block';
+                });
+            } else {
+                // Show specific section
+                const targetCarousel = document.querySelector(`[data-category="${sectionType}"]`);
+                if (targetCarousel) {
+                    targetCarousel.parentElement.style.display = 'block';
+                }
+            }
+        }
+
+        // Create mobile menu
+        function createMobileMenu() {
+            const mobileMenu = document.createElement('div');
+            mobileMenu.className = 'mobile-menu';
+            
+            const navLinks = document.querySelectorAll('.nav-menu .nav-link');
+            navLinks.forEach(link => {
+                const mobileLink = document.createElement('a');
+                mobileLink.href = link.href;
+                mobileLink.className = 'nav-link';
+                mobileLink.textContent = link.textContent;
+                if (link.classList.contains('active')) {
+                    mobileLink.classList.add('active');
+                }
+                mobileMenu.appendChild(mobileLink);
+            });
+            
+            return mobileMenu;
+        }
+
+        // Search functionality
+        if (searchBox && searchIcon) {
+            searchIcon.addEventListener('click', function() {
+                searchBox.classList.toggle('active');
+                if (searchBox.classList.contains('active')) {
+                    searchBox.querySelector('input').focus();
+                }
+            });
+            
+            // Search input handler
+            const searchInput = searchBox.querySelector('input');
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase().trim();
+                filterMovies(searchTerm);
+            });
+            
+            // Close search when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchBox.contains(e.target) && !searchIcon.contains(e.target)) {
+                    searchBox.classList.remove('active');
+                }
+            });
+        }
+
+        // Notification functionality
+        const bellIcon = document.querySelector('.bell-icon');
+        if (bellIcon) {
+            bellIcon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                showNotifications();
+            });
+        }
+
+        function showNotifications() {
+            // Create notification dropdown if it doesn't exist
+            let notificationDropdown = document.querySelector('.notification-dropdown');
+            if (!notificationDropdown) {
+                notificationDropdown = document.createElement('div');
+                notificationDropdown.className = 'notification-dropdown';
+                notificationDropdown.innerHTML = `
+                    <div class="notification-header">
+                        <h3>Notifications</h3>
+                        <button class="close-notifications">&times;</button>
+                    </div>
+                    <div class="notification-list">
+                        <div class="notification-item">
+                            <div class="notification-content">
+                                <h4>New Episode Available</h4>
+                                <p>Stranger Things Season 5 Episode 1 is now available</p>
+                                <span class="notification-time">2 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-content">
+                                <h4>Movie Recommendation</h4>
+                                <p>Based on your viewing history, you might like "The Dark Knight"</p>
+                                <span class="notification-time">5 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-content">
+                                <h4>New Release Alert</h4>
+                                <p>"Inception" is now available in 4K Ultra HD</p>
+                                <span class="notification-time">1 day ago</span>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-content">
+                                <h4>Account Update</h4>
+                                <p>Your subscription has been successfully renewed</p>
+                                <span class="notification-time">3 days ago</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(notificationDropdown);
+                
+                // Position the dropdown
+                const bellRect = bellIcon.getBoundingClientRect();
+                notificationDropdown.style.top = bellRect.bottom + 10 + 'px';
+                notificationDropdown.style.right = '20px';
+                
+                // Close button functionality
+                const closeBtn = notificationDropdown.querySelector('.close-notifications');
+                closeBtn.addEventListener('click', function() {
+                    notificationDropdown.remove();
+                });
+            } else {
+                notificationDropdown.remove();
+            }
+            
+            // Close when clicking outside
+            setTimeout(() => {
+                document.addEventListener('click', function closeNotifications(e) {
+                    if (!notificationDropdown.contains(e.target) && e.target !== bellIcon) {
+                        notificationDropdown.remove();
+                        document.removeEventListener('click', closeNotifications);
+                    }
+                });
+            }, 100);
+        }
+
+        // Filter movies based on search
+        function filterMovies(searchTerm) {
+            if (!searchTerm) {
+                // Show all sections and movies
+                document.querySelectorAll('.movie-category').forEach(section => {
+                    section.style.display = 'block';
+                });
+                document.querySelectorAll('.movie-card').forEach(card => {
+                    card.style.display = 'block';
+                });
+                return;
+            }
+            
+            // Hide all sections first
+            document.querySelectorAll('.movie-category').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Create search results section if it doesn't exist
+            let searchResultsSection = document.querySelector('.search-results');
+            if (!searchResultsSection) {
+                searchResultsSection = document.createElement('section');
+                searchResultsSection.className = 'movie-category search-results';
+                searchResultsSection.innerHTML = `
+                    <h2 class="category-title">Search Results</h2>
+                    <div class="movie-carousel" data-category="search-results"></div>
+                `;
+                document.querySelector('main').appendChild(searchResultsSection);
+            }
+            
+            const searchCarousel = searchResultsSection.querySelector('.movie-carousel');
+            searchCarousel.innerHTML = '';
+            
+            // Find matching movies
+            const allMovies = document.querySelectorAll('.movie-card');
+            let foundMatches = false;
+            
+            allMovies.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const genre = card.querySelector('p').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || genre.includes(searchTerm)) {
+                    const clonedCard = card.cloneNode(true);
+                    searchCarousel.appendChild(clonedCard);
+                    foundMatches = true;
+                }
+            });
+            
+            if (foundMatches) {
+                searchResultsSection.style.display = 'block';
+                // Add carousel controls to search results
+                addCarouselControls(searchCarousel);
+            } else {
+                // Show no results message
+                searchCarousel.innerHTML = '<div class="no-results">No movies found matching your search.</div>';
+                searchResultsSection.style.display = 'block';
+            }
+        }
+
+        // Movie carousel functionality
+        movieCarousels.forEach(carousel => {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+            
+            // Mouse drag scrolling
+            carousel.addEventListener('mousedown', function(e) {
+                isDown = true;
+                carousel.style.cursor = 'grabbing';
+                startX = e.pageX - carousel.offsetLeft;
+                scrollLeft = carousel.scrollLeft;
+            });
+            
+            carousel.addEventListener('mouseleave', function() {
+                isDown = false;
+                carousel.style.cursor = 'grab';
+            });
+            
+            carousel.addEventListener('mouseup', function() {
+                isDown = false;
+                carousel.style.cursor = 'grab';
+            });
+            
+            carousel.addEventListener('mousemove', function(e) {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - carousel.offsetLeft;
+                const walk = (x - startX) * 2;
+                carousel.scrollLeft = scrollLeft - walk;
+            });
+            
+            // Touch scrolling for mobile
+            let touchStartX;
+            carousel.addEventListener('touchstart', function(e) {
+                touchStartX = e.touches[0].clientX;
+            });
+            
+            carousel.addEventListener('touchmove', function(e) {
+                if (!touchStartX) return;
+                const touchEndX = e.touches[0].clientX;
+                const diff = touchStartX - touchEndX;
+                carousel.scrollLeft += diff;
+                touchStartX = touchEndX;
+            });
+            
+            carousel.addEventListener('touchend', function() {
+                touchStartX = null;
+            });
+            
+            // Add carousel controls
+            addCarouselControls(carousel);
+        });
+
+        // Add carousel navigation controls
+        function addCarouselControls(carousel) {
+            const controls = document.createElement('div');
+            controls.className = 'carousel-controls';
+            
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'carousel-btn prev';
+            prevBtn.innerHTML = '‹';
+            prevBtn.setAttribute('aria-label', 'Previous');
+            
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'carousel-btn next';
+            nextBtn.innerHTML = '›';
+            nextBtn.setAttribute('aria-label', 'Next');
+            
+            controls.appendChild(prevBtn);
+            controls.appendChild(nextBtn);
+            carousel.parentElement.appendChild(controls);
+            
+            // Scroll functions
+            const scrollAmount = carousel.offsetWidth * 0.8;
+            
+            prevBtn.addEventListener('click', function() {
+                carousel.scrollBy({
+                    left: -scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                carousel.scrollBy({
+                    left: scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Show/hide controls based on scroll position
+            function updateControlsVisibility() {
+                const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+                
+                if (carousel.scrollLeft <= 0) {
+                    prevBtn.style.opacity = '0.3';
+                    prevBtn.style.cursor = 'default';
+                } else {
+                    prevBtn.style.opacity = '1';
+                    prevBtn.style.cursor = 'pointer';
+                }
+                
+                if (carousel.scrollLeft >= maxScroll) {
+                    nextBtn.style.opacity = '0.3';
+                    nextBtn.style.cursor = 'default';
+                } else {
+                    nextBtn.style.opacity = '1';
+                    nextBtn.style.cursor = 'pointer';
+                }
+            }
+            
+            carousel.addEventListener('scroll', updateControlsVisibility);
+            updateControlsVisibility();
+        }
+
+        // Movie card interactions
+        movieCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Simulate movie selection
+                const movieTitle = this.querySelector('h3').textContent;
+                showMovieDetails(movieTitle);
+            });
+        });
+
+        // Show movie details (simulation)
+        function showMovieDetails(title) {
+            // Create modal
+            const modal = document.createElement('div');
+            modal.className = 'movie-modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>${title}</h2>
+                        <button class="modal-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>This is a demo movie details modal for "${title}". In a real application, this would show detailed information about the movie, including cast, director, synopsis, ratings, and streaming options.</p>
+                        <div class="modal-actions">
+                            <button class="btn btn-play">▶ Play</button>
+                            <button class="btn btn-info">ℹ More Info</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add modal to body
+            document.body.appendChild(modal);
+            
+            // Close modal events
+            const closeBtn = modal.querySelector('.modal-close');
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+            
+            // Escape key to close
+            const escapeHandler = function(e) {
+                if (e.key === 'Escape') {
+                    closeModal();
+                    document.removeEventListener('keydown', escapeHandler);
+                }
+            };
+            document.addEventListener('keydown', escapeHandler);
+            
+            function closeModal() {
+                modal.remove();
+            }
+        }
+
+        // Hero buttons functionality
+        if (playBtn) {
+            playBtn.addEventListener('click', function() {
+                showMovieDetails('Stranger Things');
+            });
+        }
+
+        if (infoBtn) {
+            infoBtn.addEventListener('click', function() {
+                showMovieDetails('Stranger Things');
+            });
+        }
+
+        // User menu dropdown
+        if (dropdownArrow) {
+            let dropdownOpen = false;
+            
+            dropdownArrow.addEventListener('click', function(e) {
+                e.preventDefault();
+                dropdownOpen = !dropdownOpen;
+                
+                if (dropdownOpen) {
+                    showUserDropdown();
+                } else {
+                    hideUserDropdown();
+                }
+            });
+            
+            function showUserDropdown() {
+                const dropdown = document.createElement('div');
+                dropdown.className = 'user-dropdown';
+                dropdown.innerHTML = `
+                    <a href="#" class="dropdown-item">Account</a>
+                    <a href="#" class="dropdown-item">Settings</a>
+                    <a href="#" class="dropdown-item">Help Center</a>
+                    <hr class="dropdown-divider">
+                    <a href="#" class="dropdown-item logout">Sign out of Netflix</a>
+                `;
+                
+                dropdownArrow.style.transform = 'rotate(180deg)';
+                dropdownArrow.parentElement.appendChild(dropdown);
+                
+                // Add dropdown styles
+                const dropdownStyles = `
+                    .user-dropdown {
+                        position: absolute;
+                        top: 100%;
+                        right: 0;
+                        background: #141414;
+                        border: 1px solid #333;
+                        border-radius: 4px;
+                        min-width: 200px;
+                        z-index: 1001;
+                        animation: fadeIn 0.3s ease;
+                    }
+                    
+                    .dropdown-item {
+                        display: block;
+                        padding: 12px 16px;
+                        color: #ffffff;
+                        text-decoration: none;
+                        transition: background 0.3s ease;
+                    }
+                    
+                    .dropdown-item:hover {
+                        background: rgba(255, 255, 255, 0.1);
+                    }
+                    
+                    .dropdown-divider {
+                        border: none;
+                        border-top: 1px solid #333;
+                        margin: 4px 0;
+                    }
+                    
+                    .logout {
+                        color: #e50914 !important;
+                    }
+                `;
+                
+                const styleSheet = document.createElement('style');
+                styleSheet.textContent = dropdownStyles;
+                document.head.appendChild(styleSheet);
+                
+                // Handle logout
+                dropdown.querySelector('.logout').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    logout();
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function closeDropdown(e) {
+                    if (!dropdownArrow.parentElement.contains(e.target)) {
+                        hideUserDropdown();
+                        document.removeEventListener('click', closeDropdown);
+                    }
+                });
+            }
+            
+            function hideUserDropdown() {
+                const dropdown = dropdownArrow.parentElement.querySelector('.user-dropdown');
+                if (dropdown) {
+                    dropdown.remove();
+                }
+                dropdownArrow.style.transform = 'rotate(0deg)';
+                dropdownOpen = false;
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('netflixLoggedIn');
+            localStorage.removeItem('netflixEmail');
+            localStorage.removeItem('netflixRememberMe');
+            loginContainer.classList.add('active');
+            mainApp.classList.remove('active');
+        }
+
+        // Initialize on page load
+        // Movie detail functionality
+        const movieDatabase = {
+            'Stranger Things': {
+                title: 'Stranger Things',
+                year: '2016-2024',
+                rating: 'TV-14',
+                duration: '4 Seasons',
+                genres: ['Sci-Fi', 'Drama', 'Horror'],
+                description: 'When a young boy disappears, his mother, a police chief and his friends must confront terrifying supernatural forces in order to get him back. A love letter to the 80s classics that captivated a generation.',
+                cast: ['Millie Bobby Brown', 'Finn Wolfhard', 'David Harbour', 'Winona Ryder', 'Gaten Matarazzo'],
+                image: 'https://picsum.photos/seed/stranger-things/1200/600.jpg'
+            },
+            'The Crown': {
+                title: 'The Crown',
+                year: '2016-2023',
+                rating: 'TV-MA',
+                duration: '6 Seasons',
+                genres: ['Drama', 'History'],
+                description: 'Follows the political rivalries and romance of Queen Elizabeth II\'s reign and the events that shaped the second half of the 20th century.',
+                cast: ['Claire Foy', 'Olivia Colman', 'Imelda Staunton', 'Matt Smith', 'Josh O\'Connor'],
+                image: 'https://picsum.photos/seed/the-crown/1200/600.jpg'
+            },
+            'Wednesday': {
+                title: 'Wednesday',
+                year: '2022-',
+                rating: 'TV-14',
+                duration: '1 Season',
+                genres: ['Horror', 'Comedy', 'Mystery'],
+                description: 'While navigating her new relationships, Wednesday Addams attempts to solve a monstrous mystery at her new school.',
+                cast: ['Jenna Ortega', 'Catherine Zeta-Jones', 'Luis Guzmán', 'Gwendoline Christie', 'Riki Lindhome'],
+                image: 'https://picsum.photos/seed/wednesday/1200/600.jpg'
+            },
+            'Oppenheimer': {
+                title: 'Oppenheimer',
+                year: '2023',
+                rating: 'R',
+                duration: '3h',
+                genres: ['Biography', 'Drama', 'History'],
+                description: 'The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb during World War II.',
+                cast: ['Cillian Murphy', 'Emily Blunt', 'Matt Damon', 'Robert Downey Jr.', 'Florence Pugh'],
+                image: 'https://picsum.photos/seed/oppenheimer/1200/600.jpg'
+            },
+            'Barbie': {
+                title: 'Barbie',
+                year: '2023',
+                rating: 'PG-13',
+                duration: '1h 54m',
+                genres: ['Comedy', 'Fantasy', 'Adventure'],
+                description: 'Barbie suffers a crisis that leads her to question her world and her existence, then she journeys to the real world.',
+                cast: ['Margot Robbie', 'Ryan Gosling', 'America Ferrera', 'Kate McKinnon', 'Simu Liu'],
+                image: 'https://picsum.photos/seed/barbie/1200/600.jpg'
+            }
+        };
+
+        function showMovieDetail(movieTitle) {
+            const movie = movieDatabase[movieTitle] || {
+                title: movieTitle,
+                year: '2023',
+                rating: 'PG-13',
+                duration: '2h',
+                genres: ['Drama', 'Action'],
+                description: 'An exciting film that takes you on an unforgettable journey. Experience compelling storytelling and outstanding performances.',
+                cast: ['Actor 1', 'Actor 2', 'Actor 3'],
+                image: `https://picsum.photos/seed/${movieTitle.toLowerCase().replace(/\s+/g, '-')}/1200/600.jpg`
+            };
+
+            document.getElementById('movieDetailTitle').textContent = movie.title;
+            document.getElementById('movieDetailYear').textContent = movie.year;
+            document.getElementById('movieDetailRating').textContent = movie.rating;
+            document.getElementById('movieDetailDuration').textContent = movie.duration;
+            document.getElementById('movieDetailDescription').textContent = movie.description;
+            document.getElementById('movieDetailImage').src = movie.image;
+
+            // Add genres
+            const genresContainer = document.getElementById('movieDetailGenres');
+            genresContainer.innerHTML = '';
+            movie.genres.forEach(genre => {
+                const genreTag = document.createElement('span');
+                genreTag.className = 'genre-tag';
+                genreTag.textContent = genre;
+                genresContainer.appendChild(genreTag);
+            });
+
+            // Add cast
+            const castContainer = document.getElementById('movieDetailCast');
+            castContainer.innerHTML = '';
+            movie.cast.forEach(member => {
+                const castMember = document.createElement('div');
+                castMember.className = 'cast-member';
+                castMember.textContent = member;
+                castContainer.appendChild(castMember);
+            });
+
+            document.getElementById('movieDetailModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMovieDetail() {
+            document.getElementById('movieDetailModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Add click event listeners to all movie cards
+        function addMovieCardListeners() {
+            const movieCards = document.querySelectorAll('.movie-card');
+            movieCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const titleElement = this.querySelector('h3');
+                    if (titleElement) {
+                        const movieTitle = titleElement.textContent;
+                        showMovieDetail(movieTitle);
+                    }
+                });
+            });
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('movieDetailModal');
+            if (e.target === modal) {
+                closeMovieDetail();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMovieDetail();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+            addMovieCardListeners();
+        });
+
+        // Console Easter egg
+        console.log('%c🎬 Netflix Clone', 'color: #e50914; font-size: 24px; font-weight: bold;');
+        console.log('%cWelcome to the Netflix Clone! Built with HTML, CSS, and vanilla JavaScript.', 'color: #ffffff; font-size: 14px;');
+    </script>
+</body>
+</html>
